@@ -1,4 +1,4 @@
-import { Strategy } from 'passport-google-id-token';
+import Strategy from 'passport-google-id-token';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
