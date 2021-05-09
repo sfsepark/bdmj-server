@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { HttpExceptionFilter } from '../http-exception.filter';
 import { AuthService } from './auth.service';
-import { GoogleTokenAuthGuard } from './guard/google.guard';
+import { GoogleTokenAuthGuard } from './google/google.guard';
 
 @Controller()
 export class AuthController {
