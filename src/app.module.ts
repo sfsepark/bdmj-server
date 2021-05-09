@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from './auth';
 import configuration from './config/configuration';
-import { User, UserModule } from './user';
+import { User } from './user';
 
 @Module({
   imports: [
