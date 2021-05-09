@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { AppController } from './app.controller';
 import { AuthModule } from './auth';
+import { JwtStrategy } from './auth/jwt';
 import configuration from './config/configuration';
+import { DanjiModule } from './danji';
 import { User } from './user';
 
 @Module({
@@ -26,8 +28,9 @@ import { User } from './user';
       load: [configuration],
       isGlobal: true,
     }),
+    DanjiModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [JwtStrategy],
 })
 export class AppModule {}

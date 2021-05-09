@@ -9,12 +9,12 @@ import {
 
 @Table
 export class Stock extends Model {
-  @Column
   @PrimaryKey
   @AutoIncrement
+  @Column
   id: number;
 
-  @Column
   @AllowNull(false)
+  @Column
   name: string;
 }

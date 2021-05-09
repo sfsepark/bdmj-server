@@ -1,37 +1,62 @@
 import {
   AllowNull,
   AutoIncrement,
+  BelongsTo,
   Column,
   ForeignKey,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { Stock } from 'src/stock';
-import { User } from 'src/user';
+import { Stock } from '../stock';
+import { User } from '../user';
+import { DanjiColor, Mood } from './danji.type';
 
 @Table
 export class Danji extends Model {
-  @Column
   @PrimaryKey
   @AutoIncrement
+  @Column
   id: number;
 
-  @Column
   @AllowNull(false)
   @ForeignKey(() => User)
+  @Column
   userId: number;
 
-  @Column
   @AllowNull(false)
+  @Column
   name: string;
 
+  @AllowNull(false)
   @Column
+  color: DanjiColor;
+
   @AllowNull(false)
   @ForeignKey(() => Stock)
+  @Column
   stockId: number;
 
-  @Column
+  @BelongsTo(() => Stock)
+  stock: Stock;
+
   @AllowNull(false)
+  @Column
   volume: string;
+
+  @AllowNull(false)
+  @Column
+  endDate: Date;
+
+  @AllowNull(false)
+  @Column
+  dDay: number;
+
+  @AllowNull(false)
+  @Column
+  index: number;
+
+  @AllowNull(false)
+  @Column
+  mood: Mood;
 }
