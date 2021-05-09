@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from './auth';
 import configuration from './config/configuration';
-import { User } from './user';
+import { User, UserModule } from './user';
 
 @Module({
   imports: [
