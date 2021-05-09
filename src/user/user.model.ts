@@ -8,9 +8,9 @@ import {
 
 @Table
 export class User extends Model {
-  @Column
   @PrimaryKey
   @AutoIncrement
+  @Column
   id: number;
 
   @Column
@@ -18,4 +18,7 @@ export class User extends Model {
 
   @Column
   site: string;
+
+  @Column
+  siteId: string;
 }
