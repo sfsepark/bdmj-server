@@ -6,7 +6,8 @@ export interface MemoPayload {
   mood: Mood;
   image: string | null;
   text: string;
-  date: number;
+  createDate: number;
+  updateDate: number;
 }
 
 export interface MemoContent {
