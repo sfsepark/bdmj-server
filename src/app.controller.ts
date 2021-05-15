@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt';
 import { DanjiService } from './danji';
 
@@ -19,13 +26,21 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Post('danji')
-  async createDanji(@Request() req) {
+  async createDanji(@Request() req, @Body() body) {
     const { userId } = req.user;
     const danjiCreateResponse = await this.danjiService.createDanji(
       userId,
-      req.body,
+      body,
     );
 
     return danjiCreateResponse;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('memos')
+  async getMemos(@Request() req) {
+    const { userId } = req.user;
+
+    return {};
   }
 }

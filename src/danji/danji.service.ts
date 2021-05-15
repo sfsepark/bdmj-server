@@ -43,6 +43,17 @@ export class DanjiService {
     private stockService: StockService,
   ) {}
 
+  async checkDanjiOwner(userId: string, danjiId: string): Promise<boolean> {
+    const danji = await this.danjiModel.findOne({
+      where: {
+        id: parseInt(danjiId),
+      },
+      attributes: ['userId'],
+    });
+
+    return parseInt(userId) === danji.userId;
+  }
+
   async findAllDanjis(userId: string): Promise<DanjiPayload[]> {
     const danjis = await this.danjiModel.findAll({
       include: [{ model: this.stockModel }],
