@@ -3,15 +3,21 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { query } from 'express';
 import { JwtAuthGuard } from './auth/jwt';
 import { DanjiService } from './danji';
+import { MemoService } from './memo';
 
 @Controller()
 export class AppController {
-  constructor(private danjiService: DanjiService) {}
+  constructor(
+    private danjiService: DanjiService,
+    private memoService: MemoService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('danjis')
@@ -38,9 +44,11 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get('memos')
-  async getMemos(@Request() req) {
+  async getMemos(@Request() req, @Query() query) {
     const { userId } = req.user;
 
-    return {};
+    const memos = await this.memoService.findMemos({ ...query, userId });
+
+    return { memos };
   }
 }

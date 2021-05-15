@@ -6,6 +6,7 @@ import { AuthModule } from './auth';
 import { JwtStrategy } from './auth/jwt';
 import configuration from './config/configuration';
 import { DanjiModule } from './danji';
+import { MemoModule } from './memo';
 import { User } from './user';
 
 @Module({
@@ -29,6 +30,7 @@ import { User } from './user';
       isGlobal: true,
     }),
     DanjiModule,
+    MemoModule,
   ],
   controllers: [AppController],
   providers: [JwtStrategy],
