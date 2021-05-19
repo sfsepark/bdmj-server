@@ -5,9 +5,11 @@ import {
   Post,
   Query,
   Request,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { query } from 'express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from './auth/jwt';
 import { DanjiService } from './danji';
 import { MemoService } from './memo';
@@ -47,8 +49,25 @@ export class AppController {
   async getMemos(@Request() req, @Query() query) {
     const { userId } = req.user;
 
+    await this.memoService.checkValidDanji(userId, query?.danjiId);
     const memos = await this.memoService.findMemos({ ...query, userId });
 
     return { memos };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('memo')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
+  async createMemo(
+    @Request() req,
+    @UploadedFiles() files: Express.Multer.File,
+    @Body() body,
+  ) {
+    const { userId } = req.user;
+
+    await this.memoService.checkValidDanji(userId, body?.danjiId);
+    const { memoId } = await this.memoService.createMemo({ ...body, userId });
+
+    return { memoId };
   }
 }

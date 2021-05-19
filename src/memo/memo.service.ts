@@ -1,14 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
 import { DanjiService } from 'src/danji';
+import { Mood } from 'src/danji/danji.type';
 import { Memo } from './memo.model';
-import { MemoPayload } from './memo.type';
+import { MemoCreateResponse, MemoPayload } from './memo.type';
 
 interface FindMemosArg {
   userId: string;
   danjiId: string;
-  next?: number;
-  size?: number;
+  next?: string;
+  size?: string;
+}
+
+interface CreateMemoArg {
+  userId: string;
+  mood: Mood;
+  text: string;
+  danjiId: string;
 }
 
 const convertMemo = ({
@@ -37,13 +46,54 @@ export class MemoService {
   ) {}
 
   async findMemos({
-    userId,
     danjiId,
     next,
-    size = 10,
+    size = '10',
   }: FindMemosArg): Promise<MemoPayload[]> {
-    const nextDate = next ? new Date(next) : new Date();
+    const nextDate = next ? new Date(parseInt(next)) : new Date();
 
+    const parseSize = parseInt(size);
+    if (parseSize > 100) {
+      throw new HttpException(
+        'Unpocessable Entity',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const memos = await this.memoModel.findAll({
+      where: {
+        danjiId: parseInt(danjiId),
+        updatedAt: {
+          [Op.lte]: nextDate,
+        },
+      },
+      limit: parseSize,
+      order: [
+        ['updatedAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+    });
+
+    return memos.map(convertMemo);
+  }
+
+  async createMemo({
+    mood,
+    text,
+    danjiId,
+  }: CreateMemoArg): Promise<MemoCreateResponse> {
+    const { id: memoId } = await this.memoModel.create({
+      danjiId: parseInt(danjiId),
+      text,
+      mood,
+    });
+
+    return {
+      memoId: memoId.toString(),
+    };
+  }
+
+  async checkValidDanji(userId: string, danjiId: string): Promise<boolean> {
     const isValidDanji = await this.danjiService.checkDanjiOwner(
       userId,
       danjiId,
@@ -53,16 +103,6 @@ export class MemoService {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
 
-    const memos = await this.memoModel.findAll({
-      where: {
-        danjiId: parseInt(danjiId),
-        updatedAt: {
-          $lte: nextDate,
-        },
-      },
-      limit: size,
-    });
-
-    return memos.map(convertMemo);
+    return true;
   }
 }

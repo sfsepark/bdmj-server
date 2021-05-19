@@ -16,3 +16,7 @@ export interface MemoContent {
   text: string;
   date: number;
 }
+
+export interface MemoCreateResponse {
+  memoId: string;
+}
