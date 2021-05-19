@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^7.6.15",
     "@nestjs/platform-fastify": "^7.6.15",
     "@nestjs/sequelize": "^0.2.0",
+    "@types/multer": "^1.4.5",
     "js-yaml": "^4.1.0",
     "mysql2": "^2.2.5",
     "passport": "^0.4.1",
