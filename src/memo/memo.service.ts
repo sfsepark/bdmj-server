@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
-import { DanjiService } from 'src/danji';
+import { Op, Transaction } from 'sequelize';
+import { Danji } from 'src/danji';
 import { Mood } from 'src/danji/danji.type';
 import { Memo } from './memo.model';
 import { MemoCreateResponse, MemoPayload } from './memo.type';
@@ -42,8 +42,17 @@ const convertMemo = ({
 export class MemoService {
   constructor(
     @InjectModel(Memo) private memoModel: typeof Memo,
-    private danjiService: DanjiService,
+    @InjectModel(Danji) private danjiModel: typeof Danji,
   ) {}
+
+  async deleteMemosFromDanji(danjiId: string, transaction?: Transaction) {
+    await this.memoModel.destroy({
+      where: {
+        danjiId: parseInt(danjiId),
+      },
+      transaction,
+    });
+  }
 
   async findMemos({
     danjiId,
@@ -91,18 +100,5 @@ export class MemoService {
     return {
       memoId: memoId.toString(),
     };
-  }
-
-  async checkValidDanji(userId: string, danjiId: string): Promise<boolean> {
-    const isValidDanji = await this.danjiService.checkDanjiOwner(
-      userId,
-      danjiId,
-    );
-
-    if (!isValidDanji) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-
-    return true;
   }
 }
