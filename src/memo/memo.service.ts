@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
-import { DanjiService } from 'src/danji';
+import { parse } from 'node:path';
+import { Op, Transaction } from 'sequelize';
+import { Danji } from 'src/danji';
 import { Mood } from 'src/danji/danji.type';
 import { Memo } from './memo.model';
 import { MemoCreateResponse, MemoPayload } from './memo.type';
@@ -42,8 +43,48 @@ const convertMemo = ({
 export class MemoService {
   constructor(
     @InjectModel(Memo) private memoModel: typeof Memo,
-    private danjiService: DanjiService,
+    @InjectModel(Danji) private danjiModel: typeof Danji,
   ) {}
+
+  async deleteMemosFromDanji(danjiId: string, transaction?: Transaction) {
+    await this.memoModel.destroy({
+      where: {
+        danjiId: parseInt(danjiId),
+      },
+      transaction,
+    });
+  }
+
+  async checkValidMemo(userId: string, memoId: string) {
+    const parsedMemoId = parseInt(memoId);
+
+    if (!parsedMemoId) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    const memos = await this.memoModel.findAll({
+      attributes: ['danji.id'],
+      include: [{ model: this.danjiModel, attributes: ['userId'] }],
+      where: {
+        id: parsedMemoId,
+      },
+    });
+
+    const isValid =
+      memos.filter(({ danji }) => danji.userId === parseInt(userId)).length > 0;
+
+    if (!isValid) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async deleteMemo(memoId: string) {
+    this.memoModel.destroy({
+      where: {
+        id: parseInt(memoId),
+      },
+    });
+  }
 
   async findMemos({
     danjiId,
@@ -91,18 +132,5 @@ export class MemoService {
     return {
       memoId: memoId.toString(),
     };
-  }
-
-  async checkValidDanji(userId: string, danjiId: string): Promise<boolean> {
-    const isValidDanji = await this.danjiService.checkDanjiOwner(
-      userId,
-      danjiId,
-    );
-
-    if (!isValidDanji) {
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    }
-
-    return true;
   }
 }

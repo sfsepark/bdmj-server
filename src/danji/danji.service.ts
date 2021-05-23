@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Transaction } from 'sequelize/types';
 import { Stock, StockService } from '../stock';
 import { Danji } from './danji.model';
 import {
@@ -51,7 +52,7 @@ export class DanjiService {
       attributes: ['userId'],
     });
 
-    return parseInt(userId) === danji.userId;
+    return danji && parseInt(userId) === danji.userId;
   }
 
   async findAllDanjis(userId: string): Promise<DanjiPayload[]> {
@@ -98,5 +99,28 @@ export class DanjiService {
       index,
       danjiId: danjiId.toString(),
     };
+  }
+
+  async checkValidDanji(userId: string, danjiId: string): Promise<boolean> {
+    if (!parseInt(danjiId)) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    const isValidDanji = await this.checkDanjiOwner(userId, danjiId);
+
+    if (!isValidDanji) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    return true;
+  }
+
+  async deleteDanji(danjiId: string, transaction?: Transaction) {
+    await this.danjiModel.destroy({
+      where: {
+        id: parseInt(danjiId),
+      },
+      transaction,
+    });
   }
 }
