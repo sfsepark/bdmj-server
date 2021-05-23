@@ -106,9 +106,23 @@ export class AppController {
     const { userId } = req.user;
 
     await this.danjiService.checkValidDanji(userId, body?.danjiId);
-    const { memoId } = await this.memoService.createMemo({ ...body, userId });
+    const { memoId } = await this.memoService.createMemo(body);
 
     return { memoId };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('memo/:id')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
+  async updateMemo(
+    @Request() req,
+    @Param('id') memoId: string,
+    @UploadedFiles() files: Express.Multer.File,
+    @Body() body,
+  ) {
+    const { userId } = req.user;
+    await this.memoService.checkValidMemo(userId, memoId);
+    await this.memoService.updateMemo(memoId, body);
   }
 
   @UseGuards(JwtAuthGuard)
