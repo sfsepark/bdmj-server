@@ -101,5 +101,6 @@ export class AppController {
   async deleteMemo(@Request() req, @Param('id') memoId: string) {
     const { userId } = req.user;
     await this.memoService.checkValidMemo(userId, memoId);
+    await this.memoService.deleteMemo(memoId);
   }
 }

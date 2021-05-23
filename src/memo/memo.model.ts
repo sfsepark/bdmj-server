@@ -6,6 +6,7 @@ import {
   Column,
   AllowNull,
   ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript';
 import { Danji } from 'src/danji/danji.model';
 import { Mood } from 'src/danji/danji.type';
@@ -33,4 +34,7 @@ export class Memo extends Model {
   @AllowNull(true)
   @Column
   text: string;
+
+  @BelongsTo(() => Danji)
+  danji: Danji;
 }
