@@ -14,11 +14,11 @@ interface FindMemosArg {
   size?: string;
 }
 
-interface CreateMemoArg {
-  userId: string;
+type CreateMemoArg = UpdateMemoArg & { danjiId: string };
+
+interface UpdateMemoArg {
   mood: Mood;
   text: string;
-  danjiId: string;
 }
 
 const convertMemo = ({
@@ -71,7 +71,8 @@ export class MemoService {
     });
 
     const isValid =
-      memos.filter(({ danji }) => danji.userId === parseInt(userId)).length > 0;
+      memos.filter(({ danji }) => danji && danji.userId === parseInt(userId))
+        .length > 0;
 
     if (!isValid) {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
@@ -132,5 +133,12 @@ export class MemoService {
     return {
       memoId: memoId.toString(),
     };
+  }
+
+  async updateMemo(memoId: string, { mood, text }: UpdateMemoArg) {
+    await this.memoModel.update(
+      { mood, text },
+      { where: { id: parseInt(memoId) } },
+    );
   }
 }
