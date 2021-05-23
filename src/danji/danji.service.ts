@@ -115,6 +115,43 @@ export class DanjiService {
     return true;
   }
 
+  async findDanjiByPk(danjiId: string): Promise<DanjiPayload> {
+    const result = await this.danjiModel.findByPk(parseInt(danjiId), {
+      include: [{ model: this.stockModel }],
+    });
+
+    return convertDanji(result);
+  }
+
+  async updateDanji(danjiId: string, danjiContent: DanjiContentPayload) {
+    const {
+      color,
+      endDate,
+      dDay,
+      name,
+      mood,
+      stockName,
+      volume,
+    } = danjiContent;
+
+    const { id: stockId } = await this.stockService.findOrCreateStock(
+      stockName,
+    );
+
+    await this.danjiModel.update(
+      {
+        color: color,
+        endDate: new Date(endDate),
+        dDay,
+        name,
+        mood,
+        volume,
+        stockId,
+      },
+      { where: { id: parseInt(danjiId) } },
+    );
+  }
+
   async deleteDanji(danjiId: string, transaction?: Transaction) {
     await this.danjiModel.destroy({
       where: {

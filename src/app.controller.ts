@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Query,
   Request,
   UploadedFiles,
@@ -48,6 +49,20 @@ export class AppController {
     );
 
     return danjiCreateResponse;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('danji/:id')
+  async updateDanji(
+    @Request() req,
+    @Param('id') danjiId: string,
+    @Body() body,
+  ) {
+    const { userId } = req.user;
+    await this.danjiService.checkValidDanji(userId, danjiId);
+    await this.danjiService.updateDanji(danjiId, body);
+
+    return this.danjiService.findDanjiByPk(danjiId);
   }
 
   @UseGuards(JwtAuthGuard)
