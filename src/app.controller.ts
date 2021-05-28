@@ -35,7 +35,7 @@ export class AppController {
     const danjis = await this.danjiService.findAllDanjis(userId);
 
     return {
-      danji: danjis,
+      data: danjis,
     };
   }
 
@@ -92,7 +92,7 @@ export class AppController {
     await this.danjiService.checkValidDanji(userId, query?.danjiId);
     const memos = await this.memoService.findMemos({ ...query, userId });
 
-    return { memos };
+    return { data: memos };
   }
 
   @UseGuards(JwtAuthGuard)
