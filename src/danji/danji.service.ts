@@ -15,11 +15,12 @@ const convertDanji = ({
   name,
   userId,
   color,
-  stock: { id: stockId, name: stockName },
+  stock: { id: stockId, name: stockName } = {},
   endDate,
   volume,
   dDay,
   mood,
+  index,
 }: Danji): DanjiPayload => ({
   id: id.toString(),
   name,
@@ -27,13 +28,14 @@ const convertDanji = ({
   createDate: createdAt.getTime(),
   color,
   stock: {
-    id: stockId.toString(),
+    id: stockId?.toString(),
     name: stockName,
   },
   endDate: endDate.getTime(),
   volume,
   dDay,
   mood,
+  index,
 });
 
 @Injectable()
@@ -70,7 +72,7 @@ export class DanjiService {
   async createDanji(
     userId: string,
     danjiContent: DanjiContentPayload,
-  ): Promise<DanjiCreateResponse> {
+  ): Promise<DanjiPayload> {
     const { stockName, endDate, ...rest } = danjiContent;
 
     const parsedUserId = parseInt(userId);
@@ -82,12 +84,11 @@ export class DanjiService {
       },
     });
 
-    const [{ id: stockId }, count] = await Promise.all([
-      stockPromise,
-      danjiCountPromise,
-    ]);
+    const [stock, count] = await Promise.all([stockPromise, danjiCountPromise]);
 
-    const { id: danjiId, index } = await this.danjiModel.create({
+    const { id: stockId } = stock;
+
+    const danji = await this.danjiModel.create({
       userId: parsedUserId,
       stockId,
       index: count + 1,
@@ -96,8 +97,8 @@ export class DanjiService {
     });
 
     return {
-      index,
-      danjiId: danjiId.toString(),
+      ...convertDanji(danji),
+      stock,
     };
   }
 

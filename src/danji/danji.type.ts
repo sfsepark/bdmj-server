@@ -25,6 +25,7 @@ export interface DanjiPayload {
   endDate: number;
   dDay: number;
   mood: Mood;
+  index: number;
 }
 
 export interface DanjiContentPayload {

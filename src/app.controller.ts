@@ -48,7 +48,13 @@ export class AppController {
       body,
     );
 
-    return danjiCreateResponse;
+    const { index, id } = danjiCreateResponse;
+
+    return {
+      index,
+      danjiId: id.toString(),
+      data: danjiCreateResponse,
+    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -106,9 +112,11 @@ export class AppController {
     const { userId } = req.user;
 
     await this.danjiService.checkValidDanji(userId, body?.danjiId);
-    const { memoId } = await this.memoService.createMemo(body);
+    const memoCreateResponse = await this.memoService.createMemo(body);
 
-    return { memoId };
+    const { id } = memoCreateResponse;
+
+    return { memoId: id.toString(), data: memoCreateResponse };
   }
 
   @UseGuards(JwtAuthGuard)

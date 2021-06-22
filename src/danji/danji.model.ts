@@ -38,7 +38,7 @@ export class Danji extends Model {
   stockId: number;
 
   @BelongsTo(() => Stock)
-  stock: Stock;
+  stock: Stock | Record<string, never>;
 
   @AllowNull(false)
   @Column
