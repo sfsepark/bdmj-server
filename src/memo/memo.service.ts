@@ -123,16 +123,14 @@ export class MemoService {
     mood,
     text,
     danjiId,
-  }: CreateMemoArg): Promise<MemoCreateResponse> {
-    const { id: memoId } = await this.memoModel.create({
+  }: CreateMemoArg): Promise<MemoPayload> {
+    const memo = await this.memoModel.create({
       danjiId: parseInt(danjiId),
       text,
       mood,
     });
 
-    return {
-      memoId: memoId.toString(),
-    };
+    return convertMemo(memo);
   }
 
   async updateMemo(memoId: string, { mood, text }: UpdateMemoArg) {
