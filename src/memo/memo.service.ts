@@ -1,11 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { parse } from 'node:path';
 import { Op, Transaction } from 'sequelize';
 import { Danji } from 'src/danji';
 import { Mood } from 'src/danji/danji.type';
 import { Memo } from './memo.model';
-import { MemoCreateResponse, MemoPayload } from './memo.type';
+import { MemoPayload } from './memo.type';
 
 interface FindMemosArg {
   userId: string;
