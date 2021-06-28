@@ -35,5 +35,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd bdmj-server
+            git pull
             yarn install
+            cp ~/config/config.yml ./dist/config
             pm2 reload bmdj
