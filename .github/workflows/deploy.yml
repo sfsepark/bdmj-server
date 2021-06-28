@@ -35,7 +35,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd bdmj-server
-            git pull
+            git fetch --all
+            git reset --hard origin/${GITHUB_REF#refs/heads/}
+            git pull origin ${GITHUB_REF#refs/heads/}
             yarn install
             cp ~/config/config.yml ./dist/config
             pm2 reload bmdj
