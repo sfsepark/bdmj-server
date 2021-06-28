@@ -1,8 +1,8 @@
 name: CD
-# [pull_request]
-on: 
-  push:
-    branches: [ release/1.0.0 ]
+
+on: [pull_request]
+#   push:
+#     branches: [ release/1.0.0 ]
     
 jobs:
   build:
