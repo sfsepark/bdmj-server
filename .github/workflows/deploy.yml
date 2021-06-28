@@ -34,5 +34,6 @@ jobs:
           key : ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            cd bdmj-server
             yarn install
             pm2 reload bmdj
