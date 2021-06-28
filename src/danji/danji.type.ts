@@ -1,5 +1,4 @@
 import { StockPayload } from '../stock';
-import { Danji } from './danji.model';
 
 export enum Mood {
   HAPPY = 'HAPPY',
