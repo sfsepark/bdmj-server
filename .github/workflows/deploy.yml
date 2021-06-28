@@ -25,4 +25,4 @@ jobs:
           SOURCE: "dist/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USERNAME }}
-          TARGET: "/home/sfsepark/bdmj-server"
+          TARGET: "/home/sfsepark/bdmj-server/dist"
