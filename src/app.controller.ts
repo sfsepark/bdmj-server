@@ -10,15 +10,15 @@ import {
   Put,
   Query,
   Request,
-  UploadedFiles,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Sequelize } from 'sequelize-typescript';
 import { JwtAuthGuard } from './auth/jwt';
 import { DanjiService } from './danji';
 import { MemoService } from './memo';
+import { AmazonS3FileInterceptor } from 'nestjs-multer-extended';
 
 @Controller()
 export class AppController {
@@ -103,13 +103,18 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Post('memo')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
+  @UseInterceptors(
+    AmazonS3FileInterceptor('image', {
+      randomFilename: true,
+    }),
+  )
   async createMemo(
     @Request() req,
-    @UploadedFiles() files: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
     @Body() body,
   ) {
     const { userId } = req.user;
+    console.log(file);
 
     await this.danjiService.checkValidDanji(userId, body?.danjiId);
     const memoCreateResponse = await this.memoService.createMemo(body);
@@ -121,18 +126,21 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Put('memo/:id')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
+  @UseInterceptors(AmazonS3FileInterceptor('image'))
   async updateMemo(
     @Request() req,
     @Param('id') memoId: string,
-    @UploadedFiles() files: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
     @Body() body,
   ) {
     const { userId } = req.user;
+    console.log(file);
+
     await this.memoService.checkValidMemo(userId, memoId);
     await this.memoService.updateMemo(memoId, body);
   }
 
+  //이미지 지우기
   @UseGuards(JwtAuthGuard)
   @Delete('memo/:id')
   async deleteMemo(@Request() req, @Param('id') memoId: string) {
