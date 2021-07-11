@@ -32,17 +32,20 @@ import { User } from './user';
     }),
     MulterExtendedModule.registerAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        awsConfig: {
-          accessKeyId: configService.get<string>('SPACE.KEY'),
-          secretAccessKey: configService.get<string>('SPACE.SECRET'),
-        },
-        bucket: configService.get<string>('SPACE.ENDPOINT'),
-        basePath: '/memo/',
-        fileSize: 1 * 1024 * 1024 * 10,
-        endpoint: 'nyc3.digitaloceanspaces.com',
-        acl: 'public-read',
-      }),
+      useFactory: async (configService: ConfigService) => {
+        console.log(configService.get<string>('SPACE.BUCKET'));
+        return {
+          awsConfig: {
+            accessKeyId: configService.get<string>('SPACE.KEY'),
+            secretAccessKey: configService.get<string>('SPACE.SECRET'),
+          },
+          bucket: configService.get<string>('SPACE.BUCKET'),
+          basePath: 'memo',
+          fileSize: 1 * 1024 * 1024 * 10,
+          endpoint: configService.get<string>('SPACE.ENDPOINT'),
+          acl: 'public-read',
+        };
+      },
     }),
     DanjiModule,
     MemoModule,

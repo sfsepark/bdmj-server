@@ -108,13 +108,10 @@ export class AppController {
       randomFilename: true,
     }),
   )
-  async createMemo(
-    @Request() req,
-    @UploadedFile() file: Express.Multer.File,
-    @Body() body,
-  ) {
+  async createMemo(@Request() req, @UploadedFile() file, @Body() body) {
     const { userId } = req.user;
-    console.log(file);
+
+    body.image = file?.Location;
 
     await this.danjiService.checkValidDanji(userId, body?.danjiId);
     const memoCreateResponse = await this.memoService.createMemo(body);
@@ -130,17 +127,17 @@ export class AppController {
   async updateMemo(
     @Request() req,
     @Param('id') memoId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file,
     @Body() body,
   ) {
     const { userId } = req.user;
-    console.log(file);
+
+    body.image = file?.Location;
 
     await this.memoService.checkValidMemo(userId, memoId);
     await this.memoService.updateMemo(memoId, body);
   }
 
-  //이미지 지우기
   @UseGuards(JwtAuthGuard)
   @Delete('memo/:id')
   async deleteMemo(@Request() req, @Param('id') memoId: string) {
