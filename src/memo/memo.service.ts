@@ -18,6 +18,7 @@ type CreateMemoArg = UpdateMemoArg & { danjiId: string };
 interface UpdateMemoArg {
   mood: Mood;
   text: string;
+  image?: string;
 }
 
 const convertMemo = ({
@@ -121,11 +122,13 @@ export class MemoService {
   async createMemo({
     mood,
     text,
+    image,
     danjiId,
   }: CreateMemoArg): Promise<MemoPayload> {
     const memo = await this.memoModel.create({
       danjiId: parseInt(danjiId),
       text,
+      image,
       mood,
     });
 
