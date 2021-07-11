@@ -57,6 +57,24 @@ export class DanjiService {
     return danji && parseInt(userId) === danji.userId;
   }
 
+  async checkDanjisOwner(userId: string, danjiIds: string[]): Promise<boolean> {
+    const danjis = await this.danjiModel.findAll({
+      where: {
+        id: {
+          in: danjiIds.map(parseInt),
+        },
+      },
+      attributes: ['userId'],
+    });
+
+    const parsedUserId = parseInt(userId);
+
+    return (
+      danjis &&
+      danjis.some(({ userId: danjiUserId }) => danjiUserId === parsedUserId)
+    );
+  }
+
   async findAllDanjis(userId: string): Promise<DanjiPayload[]> {
     const danjis = await this.danjiModel.findAll({
       include: [{ model: this.stockModel }],
@@ -116,6 +134,20 @@ export class DanjiService {
     return true;
   }
 
+  async checkValidDanjis(userId: string, danjiIds: string[]): Promise<boolean> {
+    if (!Array.isArray(danjiIds)) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    const isValidDanjis = await this.checkDanjisOwner(userId, danjiIds);
+
+    if (!isValidDanjis) {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    return true;
+  }
+
   async findDanjiByPk(danjiId: string): Promise<DanjiPayload> {
     const result = await this.danjiModel.findByPk(parseInt(danjiId), {
       include: [{ model: this.stockModel }],
@@ -160,5 +192,16 @@ export class DanjiService {
       },
       transaction,
     });
+  }
+
+  async updateDanjisIndex(danjiIds: string[], transaction?: Transaction) {
+    return await Promise.all(
+      danjiIds.map(async (danjiId, i) => {
+        return this.danjiModel.update(
+          { index: i + 1 },
+          { where: { id: parseInt(danjiId) }, transaction },
+        );
+      }),
+    );
   }
 }

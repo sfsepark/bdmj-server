@@ -40,6 +40,32 @@ export class AppController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Put('danjis')
+  async updateDanjisIndex(@Request() req, @Body() body) {
+    const { userId } = req.user;
+    const { danjiIds } = body;
+
+    const transaction = await this.sequelize.transaction();
+
+    await this.danjiService.checkDanjisOwner(userId, danjiIds);
+
+    try {
+      await this.danjiService.updateDanjisIndex(danjiIds, transaction);
+    } catch (e) {
+      await transaction.rollback();
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    await transaction.commit();
+
+    const danjis = await this.danjiService.findAllDanjis(userId);
+
+    return {
+      data: danjis,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('danji')
   async createDanji(@Request() req, @Body() body) {
     const { userId } = req.user;
