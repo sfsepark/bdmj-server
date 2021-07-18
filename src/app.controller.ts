@@ -53,6 +53,7 @@ export class AppController {
       await this.danjiService.updateDanjisIndex(danjiIds, transaction);
     } catch (e) {
       await transaction.rollback();
+      console.log(e);
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
 
