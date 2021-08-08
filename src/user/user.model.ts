@@ -4,6 +4,7 @@ import {
   Model,
   PrimaryKey,
   Table,
+  DataType,
 } from 'sequelize-typescript';
 
 @Table
@@ -19,6 +20,6 @@ export class User extends Model {
   @Column
   site: string;
 
-  @Column
+  @Column(DataType.TEXT({ length: 'long' }))
   siteId: string;
 }
