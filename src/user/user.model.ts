@@ -5,6 +5,7 @@ import {
   PrimaryKey,
   Table,
   DataType,
+  AllowNull,
 } from 'sequelize-typescript';
 
 @Table
@@ -22,4 +23,8 @@ export class User extends Model {
 
   @Column(DataType.TEXT({ length: 'long' }))
   siteId: string;
+
+  @AllowNull(false)
+  @Column({ defaultValue: false })
+  isLeaved: boolean;
 }

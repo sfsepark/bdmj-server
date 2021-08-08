@@ -8,7 +8,7 @@ import { JwtStrategy } from './auth/jwt';
 import configuration from './config/configuration';
 import { DanjiModule } from './danji';
 import { MemoModule } from './memo';
-import { User } from './user';
+import { User, UserModule } from './user';
 
 @Module({
   imports: [
@@ -49,6 +49,7 @@ import { User } from './user';
     }),
     DanjiModule,
     MemoModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [JwtStrategy],
