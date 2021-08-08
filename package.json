@@ -34,6 +34,7 @@
     "mysql2": "^2.2.5",
     "nestjs-multer-extended": "^1.4.2",
     "passport": "^0.4.1",
+    "passport-auth-token": "^1.0.1",
     "passport-google-id-token": "^0.4.7",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { UserModule } from '../user';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
+import { AppleTokenStrategy } from './apple';
 
 @Module({
   imports: [
@@ -19,7 +20,12 @@ import { JwtModule } from '@nestjs/jwt';
       }),
     }),
   ],
-  providers: [GoogleTokenStrategy, ConfigService, AuthService],
+  providers: [
+    GoogleTokenStrategy,
+    AppleTokenStrategy,
+    ConfigService,
+    AuthService,
+  ],
   controllers: [AuthController],
   exports: [AuthService, JwtModule],
 })

@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from '../http-exception.filter';
+import { AppleTokenAuthGuard } from './apple/apple.guard';
 import { AuthService } from './auth.service';
 import { GoogleTokenAuthGuard } from './google/google.guard';
 
@@ -17,7 +18,13 @@ export class AuthController {
   @UseGuards(GoogleTokenAuthGuard)
   @Post('auth/google')
   @UseFilters(HttpExceptionFilter)
-  async login(@Request() req) {
+  async gooleLogin(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(AppleTokenAuthGuard)
+  @Post('auth/apple')
+  async appleLogin(@Request() req) {
     return this.authService.login(req.user);
   }
 }
