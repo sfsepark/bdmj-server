@@ -7,6 +7,7 @@ import {
   DanjiContentPayload,
   DanjiCreateResponse,
   DanjiPayload,
+  Mood,
 } from './danji.type';
 
 const convertDanji = ({
@@ -202,6 +203,13 @@ export class DanjiService {
           { where: { id: parseInt(danjiId) }, transaction },
         );
       }),
+    );
+  }
+
+  async updateDanjiMood(danjiId: string, mood: Mood) {
+    await this.danjiModel.update(
+      { mood },
+      { where: { id: parseInt(danjiId) } },
     );
   }
 }
