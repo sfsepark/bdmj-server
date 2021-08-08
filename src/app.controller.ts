@@ -95,7 +95,25 @@ export class AppController {
     await this.danjiService.checkValidDanji(userId, danjiId);
     await this.danjiService.updateDanji(danjiId, body);
 
-    return this.danjiService.findDanjiByPk(danjiId);
+    return await this.danjiService.findDanjiByPk(danjiId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('danji/:id/mood')
+  async updateDanjiMood(
+    @Request() req,
+    @Param('id') danjiId: string,
+    @Body() body,
+  ) {
+    const { userId } = req.user;
+    const { mood } = body;
+    await this.danjiService.checkValidDanji(userId, danjiId);
+    if (mood !== 'HAPPY' && mood !== 'SAD') {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+    await this.danjiService.updateDanjiMood(danjiId, mood);
+
+    return await this.danjiService.findDanjiByPk(danjiId);
   }
 
   @UseGuards(JwtAuthGuard)
