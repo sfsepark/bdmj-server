@@ -2,6 +2,7 @@ import { StockPayload } from '../stock';
 
 export enum Mood {
   HAPPY = 'HAPPY',
+  NORMAL = 'NORMAL',
   SAD = 'SAD',
 }
 
