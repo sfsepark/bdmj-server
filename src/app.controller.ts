@@ -108,7 +108,7 @@ export class AppController {
     const { userId } = req.user;
     const { mood } = body;
     await this.danjiService.checkValidDanji(userId, danjiId);
-    if (mood !== 'HAPPY' && mood !== 'SAD') {
+    if (mood !== 'HAPPY' && mood !== 'SAD' && mood !== 'NORMAL') {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
     await this.danjiService.updateDanjiMood(danjiId, mood);
