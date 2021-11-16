@@ -12,7 +12,12 @@ import { UserService } from '../user';
 import { HttpExceptionFilter } from '../http-exception.filter';
 import { AppleTokenAuthGuard } from './apple';
 import { AuthService } from './auth.service';
-import { GoogleDefaultTokenAuthGuard, GoogleWebTokenAuthGuard } from './google';
+import {
+  GoogleAndroidTokenAuthGuard,
+  GoogleDefaultTokenAuthGuard,
+  GoogleIOSTokenAuthGuard,
+  GoogleWebTokenAuthGuard,
+} from './google';
 import { JwtAuthGuard } from './jwt';
 
 @Controller()
@@ -33,6 +38,20 @@ export class AuthController {
   @Post('auth/google-web')
   @UseFilters(HttpExceptionFilter)
   async gooleWebLogin(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(GoogleAndroidTokenAuthGuard)
+  @Post('auth/google-android')
+  @UseFilters(HttpExceptionFilter)
+  async gooleAndroidLogin(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(GoogleIOSTokenAuthGuard)
+  @Post('auth/google-iOS')
+  @UseFilters(HttpExceptionFilter)
+  async gooleIOSLogin(@Request() req) {
     return this.authService.login(req.user);
   }
 
