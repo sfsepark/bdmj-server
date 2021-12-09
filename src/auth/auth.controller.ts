@@ -4,7 +4,6 @@ import {
   Get,
   Post,
   Request,
-  SetMetadata,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
@@ -12,12 +11,7 @@ import { UserService } from '../user';
 import { HttpExceptionFilter } from '../http-exception.filter';
 import { AppleTokenAuthGuard } from './apple';
 import { AuthService } from './auth.service';
-import {
-  GoogleAndroidTokenAuthGuard,
-  GoogleDefaultTokenAuthGuard,
-  GoogleIOSTokenAuthGuard,
-  GoogleWebTokenAuthGuard,
-} from './google';
+import { GoogleTokenAuthGuard } from './google/google.guard';
 import { JwtAuthGuard } from './jwt';
 
 @Controller()
@@ -27,31 +21,10 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
-  @UseGuards(GoogleDefaultTokenAuthGuard)
+  @UseGuards(GoogleTokenAuthGuard)
   @Post('auth/google')
   @UseFilters(HttpExceptionFilter)
   async gooleLogin(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(GoogleWebTokenAuthGuard)
-  @Post('auth/google-web')
-  @UseFilters(HttpExceptionFilter)
-  async gooleWebLogin(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(GoogleAndroidTokenAuthGuard)
-  @Post('auth/google-android')
-  @UseFilters(HttpExceptionFilter)
-  async gooleAndroidLogin(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @UseGuards(GoogleIOSTokenAuthGuard)
-  @Post('auth/google-iOS')
-  @UseFilters(HttpExceptionFilter)
-  async gooleIOSLogin(@Request() req) {
     return this.authService.login(req.user);
   }
 

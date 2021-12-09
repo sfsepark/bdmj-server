@@ -8,7 +8,7 @@ import {
 } from './google';
 import { AuthController } from './auth.controller';
 import { ConfigService } from '@nestjs/config';
-import { UserModule } from '../user';
+import { UserModule, UserService } from '../user';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AppleTokenStrategy } from './apple';
