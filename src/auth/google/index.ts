@@ -1,2 +1,12 @@
-export { GoogleTokenStrategy } from './google.strategy';
-export { GoogleTokenAuthGuard } from './google.guard';
+export {
+  GoogleWebTokenProvider,
+  GoogleIOSTokenProvider,
+  GoogleDefaultTokenProvider,
+  GoogleAndroidTokenProvider,
+} from './google.strategy';
+export {
+  GoogleWebTokenAuthGuard,
+  GoogleAndroidTokenAuthGuard,
+  GoogleDefaultTokenAuthGuard,
+  GoogleIOSTokenAuthGuard,
+} from './google.guard';
