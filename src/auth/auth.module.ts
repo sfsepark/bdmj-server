@@ -1,14 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import {
-  GoogleAndroidTokenStrategy,
-  GoogleDefaultTokenStrategy,
-  GoogleIOSTokenStrategy,
-  GoogleWebTokenStrategy,
-} from './google';
+import { GoogleTokenStrategy } from './google';
 import { AuthController } from './auth.controller';
 import { ConfigService } from '@nestjs/config';
-import { UserModule } from '../user';
+import { UserModule, UserService } from '../user';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AppleTokenStrategy } from './apple';
@@ -26,10 +21,7 @@ import { AppleTokenStrategy } from './apple';
     }),
   ],
   providers: [
-    GoogleWebTokenStrategy,
-    GoogleIOSTokenStrategy,
-    GoogleDefaultTokenStrategy,
-    GoogleAndroidTokenStrategy,
+    GoogleTokenStrategy,
     AppleTokenStrategy,
     ConfigService,
     AuthService,
