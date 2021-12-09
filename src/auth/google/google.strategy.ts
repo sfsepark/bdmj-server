@@ -1,6 +1,6 @@
 import Strategy from 'passport-google-id-token';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Provider, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 import { UserPayload } from 'src/user';
@@ -62,15 +62,22 @@ const generateGoogleTokenStrategy = (
   return GoogleTokenStrategy;
 };
 
-export const GoogleDefaultTokenStrategy = generateGoogleTokenStrategy(
+const generateGoolgeTokenProvider = (
+  strategyType: GoogleTokenStrategyType,
+): Provider => ({
+  provide: generateGoogleIdTokenStrategyName(strategyType),
+  useClass: generateGoogleTokenStrategy(strategyType),
+});
+
+export const GoogleDefaultTokenProvider = generateGoolgeTokenProvider(
   GoogleTokenStrategyType.default,
 );
-export const GoogleWebTokenStrategy = generateGoogleTokenStrategy(
+export const GoogleWebTokenProvider = generateGoolgeTokenProvider(
   GoogleTokenStrategyType.web,
 );
-export const GoogleIOSTokenStrategy = generateGoogleTokenStrategy(
+export const GoogleIOSTokenProvider = generateGoolgeTokenProvider(
   GoogleTokenStrategyType.iOS,
 );
-export const GoogleAndroidTokenStrategy = generateGoogleTokenStrategy(
+export const GoogleAndroidTokenProvider = generateGoolgeTokenProvider(
   GoogleTokenStrategyType.android,
 );

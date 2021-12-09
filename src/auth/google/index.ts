@@ -1,8 +1,8 @@
 export {
-  GoogleWebTokenStrategy,
-  GoogleIOSTokenStrategy,
-  GoogleDefaultTokenStrategy,
-  GoogleAndroidTokenStrategy,
+  GoogleWebTokenProvider,
+  GoogleIOSTokenProvider,
+  GoogleDefaultTokenProvider,
+  GoogleAndroidTokenProvider,
 } from './google.strategy';
 export {
   GoogleWebTokenAuthGuard,
