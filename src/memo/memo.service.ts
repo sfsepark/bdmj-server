@@ -111,7 +111,7 @@ export class MemoService {
       },
       limit: parseSize,
       order: [
-        ['updatedAt', 'DESC'],
+        ['createdAt', 'DESC'],
         ['id', 'DESC'],
       ],
     });
