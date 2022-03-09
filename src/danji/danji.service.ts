@@ -12,6 +12,7 @@ import {
 
 const convertDanji = ({
   createdAt,
+  updatedAt,
   id,
   name,
   userId,
@@ -27,6 +28,7 @@ const convertDanji = ({
   name,
   userId: userId.toString(),
   createDate: createdAt.getTime(),
+  updateDate: updatedAt.getTime(),
   color,
   stock: {
     id: stockId?.toString(),

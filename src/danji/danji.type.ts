@@ -22,6 +22,7 @@ export interface DanjiPayload {
   volume: string;
   stock: StockPayload;
   createDate: number;
+  updateDate: number;
   endDate: number;
   dDay: number;
   mood: Mood;
